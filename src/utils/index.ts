@@ -26,10 +26,10 @@ export const likeCard = async<K extends { liked: Array<string> }, T extends Mode
     if (index === -1) {
         document.liked.push(visitorId)
         await document.save()
-        return { state: 200, data: '点赞成功' } as const
+        return '点赞成功'
     } else {
         document.liked.splice(index, 1)
         await document.save()
-        return { state: 200, data: '已取消赞' } as const
+        return '已取消赞'
     }
 }
