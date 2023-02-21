@@ -6,4 +6,5 @@ import { MessageCommentService } from './message-comment.service'
   controllers: [MessageCommentController],
   providers: [MessageCommentService]
 })
+
 export class MessageCommentModule { }

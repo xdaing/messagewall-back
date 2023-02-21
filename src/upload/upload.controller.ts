@@ -1,17 +1,16 @@
-import { Controller, Post, UseInterceptors, UploadedFile, Body } from '@nestjs/common'
+import { Controller, Post, UseInterceptors, UploadedFile, Body, ParseIntPipe, ValidationPipe } from '@nestjs/common'
 import { FileInterceptor } from '@nestjs/platform-express'
-import { InjectModel } from '@nestjs/mongoose'
-import { Model } from 'mongoose'
-import { Photo, PhotoDocument } from '@/db/schemas/photo.schema'
-import { CreatePhotoDto } from './dto'
+import { CreatePhoto } from './dto'
+import { UploadService } from './upload.service'
 
 @Controller('upload')
 export class UploadController {
-    constructor(@InjectModel(Photo.name) private readonly photoModel: Model<PhotoDocument>) { }
+
+    constructor(private readonly uploadService: UploadService) { }
+
     @Post()
     @UseInterceptors(FileInterceptor('file'))
-    async uploadImage(@UploadedFile() file: any, @Body() createPhotoDto: CreatePhotoDto): Promise<Photo> {
-        const data: Photo = await this.photoModel.create(Object.assign(createPhotoDto, { image: file.filename, label: parseInt(createPhotoDto.label) }))
-        return data
+    async create(@UploadedFile() file: Express.Multer.File, @Body('label', ParseIntPipe) label: number, @Body(ValidationPipe) createPhoto: CreatePhoto) {
+        return this.uploadService.create(file, createPhoto, label)
     }
 }

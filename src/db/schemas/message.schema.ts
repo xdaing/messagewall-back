@@ -5,6 +5,7 @@ export type MessageDocument = HydratedDocument<Message>
 
 @Schema()
 export class Message {
+
     // 游客的 id
     @Prop({ required: true, trim: true })
     visitorId: string
@@ -14,11 +15,11 @@ export class Message {
     label: number
 
     //  头像
-    @Prop({ required: true })
+    @Prop({ required: true, trim: true })
     avatar: string
 
     // 卡片颜色
-    @Prop({ required: true })
+    @Prop({ required: true, trim: true })
     color: string
 
     //  名称
@@ -38,13 +39,17 @@ export class Message {
     liked: Array<string>
 
 }
+
 const MessageSchema = SchemaFactory.createForClass(Message)
+
 MessageSchema.virtual('commentNumber', {
     ref: 'MessageComment',
     localField: '_id',
     foreignField: 'card',
     count: true
 })
+
 MessageSchema.set('toObject', { virtuals: true })
 MessageSchema.set('toJSON', { virtuals: true })
+
 export { MessageSchema }

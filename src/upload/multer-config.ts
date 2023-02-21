@@ -5,7 +5,7 @@ import { extname, join } from 'path'
 import { nanoid } from 'nanoid'
 
 @Injectable()
-export class MulterConfigService implements MulterOptionsFactory {
+export class MulterConfig implements MulterOptionsFactory {
     createMulterOptions(): MulterModuleOptions {
         return {
             storage: diskStorage({

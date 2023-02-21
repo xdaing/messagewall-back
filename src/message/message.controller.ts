@@ -1,21 +1,26 @@
-import { Controller, Get, Post, Query, Body } from '@nestjs/common'
-import { CardQueryInfo } from '@/types'
+import { Controller, Get, Post, Put, Query, Body, UsePipes, ParseIntPipe, ValidationPipe } from '@nestjs/common'
 import { MessageService } from './message.service'
-import { CreateMessageDto } from './dto'
+import { CreateMessage } from './dto'
+import { Like } from '@/types'
 
 @Controller('messages')
 export class MessageController {
+
     constructor(private readonly messageService: MessageService) { }
+
     @Get()
-    getMessage(@Query() cardQueryInfo: CardQueryInfo) {
-        return this.messageService.getMessage(cardQueryInfo)
+    @UsePipes(ParseIntPipe)
+    query(@Query('limit') limit: number, @Query('currentPage') currentPage: number, @Query('label') label: number) {
+        return this.messageService.query({ currentPage, label, limit })
     }
+
     @Post()
-    createMessage(@Body() createMessageDto: CreateMessageDto) {
-        return this.messageService.createMessage(createMessageDto)
+    create(@Body(ValidationPipe) createMessage: CreateMessage) {
+        return this.messageService.create(createMessage)
     }
-    @Post('like')
-    likeMessage(@Body('_id') _id: string, @Body('visitorId') visitorId: string) {
-        return this.messageService.likeMessage(_id, visitorId)
+
+    @Put('like')
+    like(@Body(ValidationPipe) like: Like) {
+        return this.messageService.like(like)
     }
 }

@@ -5,6 +5,7 @@ export type PhotoDocument = HydratedDocument<Photo>
 
 @Schema()
 export class Photo {
+
     // 游客的 id
     @Prop({ required: true, trim: true })
     visitorId: string
@@ -14,7 +15,7 @@ export class Photo {
     label: number
 
     //  头像
-    @Prop({ required: true })
+    @Prop({ required: true, trim: true })
     avatar: string
 
     //  名称
@@ -26,7 +27,7 @@ export class Photo {
     content: string
 
     // 图片 url
-    @Prop({ required: true })
+    @Prop({ required: true, trim: true })
     image: string
 
     // 时间
@@ -38,13 +39,17 @@ export class Photo {
     liked: Array<string>
 
 }
+
 const PhotoSchema = SchemaFactory.createForClass(Photo)
+
 PhotoSchema.virtual('commentNumber', {
     ref: 'PhotoComment',
     localField: '_id',
     foreignField: 'card',
     count: true
 })
+
 PhotoSchema.set('toObject', { virtuals: true })
 PhotoSchema.set('toJSON', { virtuals: true })
+
 export { PhotoSchema }

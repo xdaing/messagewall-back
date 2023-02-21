@@ -1,26 +1,18 @@
 import { Model, HydratedDocument } from 'mongoose'
-import { CommentQueryInfo, CardQueryInfo } from '@/types'
+import { CardQuery, CommentQuery, Like } from '@/types'
 
-export const queryComments = async <K, T extends Model<HydratedDocument<K>>>(model: T, commentQueryInfo: CommentQueryInfo): Promise<Array<K>> => {
-    const limit: number = parseInt(commentQueryInfo.limit)
-    const currentPage: number = parseInt(commentQueryInfo.currentPage)
-    const card: string = commentQueryInfo.card
-    const select: string = 'avatar name content time'
-    const result: Array<K> = await model.find({ card }).
-        select(select).sort('-time').skip(currentPage * limit).limit(limit)
-    return result
+export const queryCards = <K, T extends Model<HydratedDocument<K>>>
+    (model: T, cardQuery: CardQuery, select: string) => {
+    const { currentPage, label, limit } = cardQuery
+    const query = label === -1 ? {} : { label }
+    return model.find(query).select(select).
+        sort('-time').skip(currentPage * limit).
+        limit(limit).populate('commentNumber')
 }
-export const queryCards = async <K, T extends Model<HydratedDocument<K>>>(model: T, cardQueryInfo: CardQueryInfo, select: string): Promise<Array<K>> => {
-    const limit: number = parseInt(cardQueryInfo.limit)
-    const currentPage: number = parseInt(cardQueryInfo.currentPage)
-    const label: number = parseInt(cardQueryInfo.label)
-    const query: { label?: number } = label === -1 ? {} : { label }
-    const result: Array<K> = await model.find(query).
-        select(select).sort('-time').skip(currentPage * limit).limit(limit).
-        populate('commentNumber')
-    return result
-}
-export const likeCard = async<K extends { liked: Array<string> }, T extends Model<HydratedDocument<K>>>(_id: string, visitorId: string, model: T) => {
+
+export const likeCard = async<K extends { liked: Array<string> }, T extends Model<HydratedDocument<K>>>
+    (model: T, like: Like) => {
+    const { _id, visitorId } = like
     const document: HydratedDocument<K> = await model.findById(_id)
     const index = document.liked.indexOf(visitorId)
     if (index === -1) {
@@ -33,3 +25,14 @@ export const likeCard = async<K extends { liked: Array<string> }, T extends Mode
         return '已取消赞'
     }
 }
+
+export const queryComments = <K, T extends Model<HydratedDocument<K>>>(model: T, commentQuery: CommentQuery) => {
+    const { card, currentPage, limit } = commentQuery
+    const select: string = 'avatar name content time'
+    return model.find({ card }).
+        select(select).sort('-time').skip(currentPage * limit).limit(limit)
+}
+
+
+
+

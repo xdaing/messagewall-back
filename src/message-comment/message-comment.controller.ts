@@ -1,16 +1,20 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common'
+import { Controller, Get, Post, Body, Query, ValidationPipe, UsePipes } from '@nestjs/common'
 import { MessageCommentService } from './message-comment.service'
-import { CommentQueryInfo, CreateCommentDto } from '@/types'
+import { CreateComment } from '@/types'
 
 @Controller('messageComment')
 export class MessageCommentController {
+
     constructor(private readonly messageCommentService: MessageCommentService) { }
+
     @Get()
-    getMessageComment(@Query() commentQueryInfo: CommentQueryInfo) {
-        return this.messageCommentService.getMessageComment(commentQueryInfo)
+    @UsePipes(ValidationPipe)
+    query(@Query('limit') limit: number, @Query('currentPage') currentPage: number, @Query('card') card: string) {
+        return this.messageCommentService.query({ limit, currentPage, card })
     }
+
     @Post()
-    createMessageComment(@Body() comment: CreateCommentDto) {
-        return this.messageCommentService.createMessageComment(comment)
+    createMessageComment(@Body(ValidationPipe) createComment: CreateComment) {
+        return this.messageCommentService.create(createComment)
     }
 }

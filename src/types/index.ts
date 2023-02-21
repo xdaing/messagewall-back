@@ -1,19 +1,41 @@
-export interface QueryInfo {
-    readonly limit: string
-    readonly currentPage: string
+import { IsString, IsNotEmpty, MaxLength } from 'class-validator'
+
+export class Like {
+
+    @IsString()
+    @IsNotEmpty()
+    _id: string
+
+    @IsString()
+    @IsNotEmpty()
+    visitorId: string
 }
-export interface CardQueryInfo extends QueryInfo {
-    readonly label: string
+
+export interface CardQuery {
+    limit: number
+    label: number
+    currentPage: number
 }
-export interface CommentQueryInfo extends QueryInfo {
-    readonly card: string
+
+export interface CommentQuery {
+    limit: number
+    currentPage: number
+    card: string
 }
-export interface CreateCommentDto {
-    readonly name: string
-    readonly content: string
-    readonly card: string
-}
-export interface MyResponse<T> {
-    state: 200
-    data: T
+
+export class CreateComment {
+
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(6)
+    name: string
+
+    @IsString()
+    @IsNotEmpty()
+    @MaxLength(30)
+    content: string
+
+    @IsString()
+    @IsNotEmpty()
+    card: string
 }

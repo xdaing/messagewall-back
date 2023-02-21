@@ -7,6 +7,7 @@ import { PhotoModule } from '@/photo/photo.module'
 import { PhotoCommentModule } from '@/photo-comment/photo-comment.module'
 
 @Module({
-  imports: [DbModule, MessageModule, MessageCommentModule, UploadModule, PhotoModule, PhotoCommentModule],
+  imports: [DbModule, MessageModule, MessageCommentModule, UploadModule, PhotoModule, PhotoCommentModule]
 })
+
 export class AppModule { }

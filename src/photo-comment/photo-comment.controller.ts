@@ -1,17 +1,21 @@
-import { Controller, Get, Post, Query, Body } from '@nestjs/common'
-import { CommentQueryInfo, CreateCommentDto } from '@/types'
+import { Controller, Get, Post, Query, Body, ValidationPipe, UsePipes } from '@nestjs/common'
 import { PhotoCommentService } from './photo-comment.service'
+import { CreateComment } from '@/types'
 
 
 @Controller('photoComment')
 export class PhotoCommentController {
+
     constructor(private readonly photoCommentService: PhotoCommentService) { }
+
     @Get()
-    getMessageComment(@Query() commentQueryInfo: CommentQueryInfo) {
-        return this.photoCommentService.getPhotoComment(commentQueryInfo)
+    @UsePipes(ValidationPipe)
+    query(@Query('limit') limit: number, @Query('currentPage') currentPage: number, @Query('card') card: string) {
+        return this.photoCommentService.query({ currentPage, limit, card })
     }
+
     @Post()
-    createMessageComment(@Body() comment: CreateCommentDto) {
-        return this.photoCommentService.createPhotoComment(comment)
+    create(@Body(ValidationPipe) createComment: CreateComment) {
+        return this.photoCommentService.create(createComment)
     }
 }

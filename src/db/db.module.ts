@@ -1,12 +1,12 @@
 import { Module, Global } from '@nestjs/common'
 import { MongooseModule } from '@nestjs/mongoose'
-
 import { Message, MessageSchema } from './schemas/message.schema'
 import { Photo, PhotoSchema } from './schemas/photo.schema'
 import { MessageComment, MessageCommentSchema } from './schemas/message-comment.schema'
 import { PhotoComment, PhotoCommentSchema } from './schemas/photo-comment.schema'
 
-const Connection = MongooseModule.forRoot('mongodb://localhost/nestWall')
+const Connection = MongooseModule.forRoot('mongodb://127.0.0.1/nestWall')
+
 const Models = MongooseModule.forFeature([
     { name: Message.name, schema: MessageSchema },
     { name: Photo.name, schema: PhotoSchema },
@@ -19,4 +19,5 @@ const Models = MongooseModule.forFeature([
     imports: [Connection, Models],
     exports: [Models]
 })
+
 export class DbModule { }

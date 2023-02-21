@@ -6,4 +6,5 @@ import { PhotoCommentService } from './photo-comment.service'
   controllers: [PhotoCommentController],
   providers: [PhotoCommentService]
 })
+
 export class PhotoCommentModule { }

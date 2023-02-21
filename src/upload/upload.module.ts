@@ -1,13 +1,17 @@
 import { Module } from '@nestjs/common'
 import { MulterModule } from '@nestjs/platform-express'
-import { MulterConfigService } from './MulterConfigService.service'
+import { MulterConfig } from './multer-config'
 import { UploadController } from './upload.controller'
+import { UploadService } from './upload.service'
 
 const uploadImageModule = MulterModule.registerAsync({
-    useClass: MulterConfigService
+    useClass: MulterConfig
 })
+
 @Module({
     imports: [uploadImageModule],
     controllers: [UploadController],
+    providers: [UploadService],
 })
+
 export class UploadModule { }

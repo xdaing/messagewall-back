@@ -1,17 +1,21 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common'
-import { CardQueryInfo } from '@/types'
+import { Controller, Get, Put, Body, Query, ValidationPipe, ParseIntPipe, UsePipes } from '@nestjs/common'
 import { PhotoService } from './photo.service'
+import { Like } from '@/types'
 
 @Controller('photos')
 export class PhotoController {
+
     constructor(private readonly photoService: PhotoService) { }
 
     @Get()
-    getPhoto(@Query() cardQueryInfo: CardQueryInfo) {
-        return this.photoService.getPhoto(cardQueryInfo)
+    @UsePipes(ParseIntPipe)
+    query(@Query('currentPage') currentPage: number, @Query('limit') limit: number, @Query('label') label: number) {
+        return this.photoService.query({ currentPage, limit, label })
     }
-    @Post('like')
-    like(@Body('_id') _id: string, @Body('visitorId') visitorId: string) {
-        return this.photoService.likePhoto(_id, visitorId)
+
+    @Put('like')
+    like(@Body(ValidationPipe) like: Like) {
+        return this.photoService.like(like)
     }
+
 }
